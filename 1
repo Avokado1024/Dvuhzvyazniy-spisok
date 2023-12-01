@@ -1,0 +1,156 @@
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* next;
+    Node* prev;
+};
+
+class link {
+public:
+    link();
+    link(int data);
+    bool add_element(int data);
+    void Print();
+    void ReversePrint();
+    void sort();
+    void delete_element(int value);
+    bool find_element(int k);
+    bool insert_element(int data, int pos);
+private:
+    Node* first;
+    Node* last;
+};
+
+link::link() {
+    first = nullptr;
+    last = nullptr;
+}
+
+bool link::add_element(int data) {
+    Node* nd = new Node{ data,nullptr, nullptr };
+    if (last == nullptr) {
+        first = nd;
+        last = nd;
+    }
+    else {
+        nd->prev = last;
+        last->next = nd;
+        last = nd;
+    }
+    return true;
+}
+void link::ReversePrint() {
+    Node* nd = last;
+    while (nd) {
+        cout << nd->data << " ";
+        nd = nd->prev;
+    }
+
+}
+bool link::find_element(int k) {
+    Node* nd = last;
+    while (nd) {
+        if (nd->data == k) {
+            return 1;
+        }
+        nd = nd->prev;
+    }
+    return 0;
+}
+void link::delete_element(int value) {
+    Node* nd = first;
+    while (nd) {
+        if (nd->data == value) {
+            if (nd->prev != nullptr) {
+                nd->prev->next = nd->next;
+            }
+            if (nd->next != nullptr) {
+                nd->next->prev = nd->prev;
+            }
+            if (nd == first) {
+                first = nd->next;
+            }
+            if (nd == last) {
+                last = nd->prev;
+            }
+            delete nd;
+            break;
+        }
+        nd = nd->next;
+    }
+}
+bool link::insert_element(int data, int pos) {
+    Node* nd1 = first;
+    Node* nd2 = new Node{ data,nullptr, nullptr };
+    if (pos == 0) {
+        nd2->next = first;
+        first = nd2;
+        return true;
+    }
+    int i = 0;
+    while (nd1) {
+        if (i == pos - 1) {
+            nd2->prev = nd1;
+            nd2->next = nd1->next;
+            if (nd1->next != nullptr) {
+                nd1->next->prev = nd2;
+            }
+            nd1->next = nd2;
+            break;
+        }
+        nd1 = nd1->next;
+        ++i;
+    }
+}
+void link::sort() {
+    Node* nd = new Node;
+    Node* left = first;
+    Node* right = first->next;
+    while (left->next) {
+        while (right) {
+            if ((left->data) > (right->data)) {
+                nd->data = left->data;
+                left->data = right->data;
+                right->data = nd->data;
+            }
+            right = right->next;
+        }
+        left = left->next;
+        right = left->next;
+    }
+    return;
+}
+void link::Print() {
+    Node* nd = first;
+    while (nd) {
+        cout << nd->data << " ";
+        nd = nd->next;
+    }
+}
+int main() {
+    link l1;
+    l1.add_element(11);
+    l1.add_element(2);
+    l1.add_element(39);
+    l1.add_element(9);
+    l1.add_element(567);
+    l1.add_element(134);
+    l1.Print();
+    cout << endl;
+    l1.ReversePrint();
+    cout << endl;
+    cout << l1.find_element(1);
+    cout << endl;
+    l1.delete_element(2);
+    l1.Print();
+    cout << endl;
+    l1.insert_element(8, 3);
+    l1.Print();
+    cout << endl;
+    l1.sort();
+    l1.Print();
+    return 0;
+
+}
